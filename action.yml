@@ -1,0 +1,50 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: action
+name: TruffleHog Secret Scan S3 Action
+inputs:
+  bucket-name:
+    required: true
+    description: 'Name of the S3 bucket.'
+  threshold-very-high:
+    required: false
+    default: 999
+    description: 'The threshold for very high severity. Build will be broken if vulnerabilities with very high severity exceeds this threshold.'
+  threshold-high:
+    required: false
+    default: 999
+    description: 'The threshold for high severity. Build will be broken if vulnerabilities with high severity exceeds this threshold.'
+  threshold-medium:
+    required: false
+    default: 999
+    description: 'The threshold for medium severity. Build will be broken if vulnerabilities with medium severity exceeds this threshold.'
+  threshold-low:
+    required: false
+    default: 999  
+    description: 'The threshold for low severity. Build will be broken if vulnerabilities with low severity exceeds this threshold.'
+
+runs:
+  using: composite
+  steps:
+    - id: run-trufflehog-secret-s3-scan
+      name: trufflehogs3
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/trufflehog-secret-actions:main-4580921dc1ccdf8801f3cb6ca3fb6c83c0a6af80
+      shell: sh
+      env:
+        CONFIG_JSON: '{"metaInfo":{"bucketName":"${{ inputs.bucket-name }}"},"orchestratorInfo":{"assetType":"CODE","assetIdentifier":"${{ inputs.bucket-name }}","profileIdentifier":"${{ inputs.bucket-name }}"},"metaInformation":{"actor":"SCM-Bot","commit_id":"${{ cloudbees.scm.sha }}","tenent_info":"NA","scanner_type":"SAST"}}' 
+        THRESHOLD_JSON: '{"veryHigh":${{ inputs.threshold-very-high }},"high":${{ inputs.threshold-high }},"medium":${{ inputs.threshold-medium }},"low":${{ inputs.threshold-low }}}'
+        RUN_ID: ${{ cloudbees.run_id }}
+        STEP_ID: ${{ step.internal.id }}
+        JOB_ID: ${{ job.id }}
+        DNS_URL: ${{ cloudbees.api.url }}
+        JWT_TOKEN: ${{ cloudbees.api.token }}
+      run: |
+        set -x
+        echo "RUN ID: ${{ cloudbees.run_id }}"
+        echo "Job ID: ${{ job.id }}"
+        echo "Step ID: ${{ step.internal.id }}"      
+        cd /app
+        ./trufflehog_secret_scan_app scan -t 'S3' -c "${CONFIG_JSON}" -r "${THRESHOLD_JSON}"
+ 
+
+       
+        
