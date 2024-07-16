@@ -1,11 +1,11 @@
-= CloudBees action: Scan S3 with TruffleHog
+= CloudBees action: Scan Amazon S3 buckets with TruffleHog
 
-Use this action to detect secrets and sensitive information in the S3 buckets with TruffleHog, an open-source secret scanning tool.
+Use this action to scan Amazon Simple Storage Service (S3) buckets with TruffleHog, an open-source secret scanning tool to detect secrets and sensitive information.
 
 == Prerequisites
 
-This action requires prior authentication to the aws, so you must invoke the AWS authentication action before invoking the TruffleHog S3 scan action.
- For more information, refer to link:https://github.com/cloudbees-io/configure-aws-credentials[Configure AWS credentials action].
+This action requires prior authentication to Amazon Web Services (AWS), so you must invoke the AWS authentication action before invoking the TruffleHog S3 scan action. 
+For more information, refer to the link:https://github.com/cloudbees-io/configure-aws-credentials[AWS credentials configuration action].
 
 == Inputs
 
@@ -36,6 +36,13 @@ In your YAML file, add:
 
 [source,yaml]
 ----
+      - name: Configure AWS credentials
+        uses: cloudbees-io/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
       - name: Run TruffleHog S3 scan
         uses: cloudbees-io/trufflehog-secret-scan-s3@v1
         with:
@@ -47,7 +54,7 @@ In the following example, if there are more than three very high severity vulner
 [source,yaml]
 ----
 
-      - name: Run TruffleHog S3 scan
+      - name: Run TruffleHog S3 scan with threshold
         uses: cloudbees-io/trufflehog-secret-scan-s3@v1
         with:
           bucket-name: "test-bucket"
