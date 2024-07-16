@@ -1,11 +1,11 @@
 = CloudBees action: Scan Amazon S3 buckets with TruffleHog
 
-Use this action to scan Amazon Simple Storage Service (Amazon S3) buckets with TruffleHog, an open-source secret scanning tool to detect secrets and sensitive information.
+Use this action to scan Amazon Simple Storage Service (S3) buckets with TruffleHog, an open-source secret scanning tool to detect secrets and sensitive information.
 
 == Prerequisites
 
 This action requires prior authentication to Amazon Web Services (AWS), so you must invoke the AWS authentication action before invoking the TruffleHog S3 scan action. 
-For more information, refer to link:https://github.com/cloudbees-io/configure-aws-credentials[the AWS credentials configuration action].
+For more information, refer to the link:https://github.com/cloudbees-io/configure-aws-credentials[AWS credentials configuration action].
 
 == Inputs
 
