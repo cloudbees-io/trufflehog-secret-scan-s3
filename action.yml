@@ -27,7 +27,7 @@ runs:
   steps:
     - id: run-trufflehog-secret-s3-scan
       name: trufflehogs3
-      uses: docker://public.ecr.aws/l7o7z1g8/actions/trufflehog-secret-actions:main-7022522c0527d9d1513aff4caef59bd95dfe4409
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/trufflehog-secret-actions:main-6c0325403da97a6967556efdbf78b7ccdadc2f8c
       shell: sh
       env:
         CONFIG_JSON: '{"metaInfo":{"bucketName":"${{ inputs.bucket-name }}"},"orchestratorInfo":{"assetType":"CODE","assetIdentifier":"${{ inputs.bucket-name }}","profileIdentifier":"${{ inputs.bucket-name }}"},"metaInformation":{"actor":"SCM-Bot","commit_id":"${{ cloudbees.scm.sha }}","tenent_info":"NA","scanner_type":"SAST"}}' 
