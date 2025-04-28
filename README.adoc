@@ -23,22 +23,27 @@ For more information, refer to the link:https://github.com/cloudbees-io/configur
 | Yes
 | Name of the S3 bucket.
 
-| `only-verified`
-| string
-| No
-| Enable verified flag to scan only verified secrets (Default set to true).
-
-Note:  If only-verified is set to true, Trufflelog tool may utilize an external third-party api to verify the secrets detected. 
-Customers concerned about security implications involving third-party api calls should set the only-verified value to false which returns all the secrets without verification and might contain false positives. 
-
-Refer the documentation regarding the credential verification link:https://github.com/trufflesecurity/trufflehog?tab=readme-ov-file#what-is-credential-verification[here]
-
 | `threshold-very-high`
-| integer
+| Integer
 | No
 | The number threshold of very high severity vulnerabilities at which the build is broken.
 
+| `only-verified`
+| String
+| No
+| Enables the verified flag to scan only verified secrets.
+The default is `true`.^<<footnote,[1]>>^
+
 |===
+
+[#footnote]
+[IMPORTANT]
+====
+^[1]^ If `only-verified` is set to true, The TruffleHog tool may utilize an external third-party API to verify the secrets detected.
+
+Customers concerned about security implications involving third-party API calls should set the `only-verified` value to false, which returns all the secrets without verification and might include false positives.
+Refer to the link:https://github.com/trufflesecurity/trufflehog?tab=readme-ov-file#what-is-credential-verification[TruffleHog credential verification documentation] for more information.
+====
 
 == Usage examples
 
@@ -71,12 +76,13 @@ In the following example, if there are more than three very high severity vulner
           threshold-very-high: 3
 ----
 
-In the following example, set only-verfied as false.
+In the following example, `only-verified` is set to false.
+The returned secrets are not verified and might include false positives.
 
 [source,yaml]
 ----
 
-      - name: Run TruffleHog S3 scan with threshold
+      - name: Run TruffleHog S3 scan without verification
         uses: cloudbees-io/trufflehog-secret-scan-s3@v1
         with:
           bucket-name: "test-bucket"
